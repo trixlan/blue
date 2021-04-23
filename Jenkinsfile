@@ -3,8 +3,22 @@ pipeline {
   agent any
 
   stages {
-
     stage('Build') {
+        agent any
+        steps {
+            echo 'compiling...'
+        }
+    }
+    stage ('Deploy To Prod'){
+        input{
+          message "Do you want to proceed for production deployment $aplicacion ?"
+        }
+        steps {
+            sh 'echo "Deploy into Prod"'
+        }
+      }
+
+    stage('Deploy') {
 
       when {
 
@@ -12,7 +26,7 @@ pipeline {
 
           openshift.withCluster() {
 
-            return !openshift.selector('bc', 'quarkus').exists();
+            return !openshift.selector('bc', 'quarkus2').exists();
 
           }
 
